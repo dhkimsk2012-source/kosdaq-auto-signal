@@ -1,0 +1,40 @@
+name: Daily KOSDAQ Paper Trading
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 7 * * 1-5"   # 한국시간 16:30
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 라이브러리 설치
+        run: pip install -r requirements.txt
+
+      - name: 코드 실행
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python daily_signal.py
+
+      - name: 결과 저장 (CSV 자동 커밋)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add paper_trading_log.csv || true
+          git commit -m "update paper trading log" || echo "no changes"
+          git push

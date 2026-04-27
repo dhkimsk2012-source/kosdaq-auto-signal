@@ -100,7 +100,10 @@ def make_features(df):
 
     df["target"] = (df["next_close"] > df["next_open"]).astype(int)
 
-    return df.dropna()
+df = df.replace([np.inf, -np.inf], np.nan)
+df = df.dropna()
+
+return df
 
 # 모델
 def train_model(df):

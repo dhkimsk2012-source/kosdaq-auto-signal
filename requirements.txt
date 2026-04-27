@@ -1,1 +1,6 @@
-
+finance-datareader
+pandas
+numpy
+xgboost
+scikit-learn
+requests

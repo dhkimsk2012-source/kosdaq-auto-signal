@@ -142,7 +142,7 @@ def allocate(sig):
     if len(sig) == 0:
         return sig
 
-    sig["weight"] = (1/len(sig)).clip(upper=MAX_WEIGHT)
+    sig["weight"] = min(1/len(sig), MAX_WEIGHT)
     sig["target_amount"] = TOTAL_CAPITAL * sig["weight"]
 
     sig["shares"] = (sig["target_amount"] // sig["종가"]).astype(int)
